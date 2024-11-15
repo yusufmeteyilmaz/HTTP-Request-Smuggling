@@ -1,0 +1,57 @@
+#version: "3"
+services:
+  # below example we have 2 reverse proxies and server
+  # you can access server by using mitmproxy or haproxy but not both
+  # mitmproxy --> server
+  #  haproxy  --> server
+
+  gunicorn:                     # this is final destination of our request aka backend server
+    build:
+      context: ./gunicorn
+    networks:
+      - secret_network  
+
+  mitmproxy:                     # this is our proxy
+    build:
+      context: ./mitmproxy
+    networks:
+      - secret_network
+    ports:
+      - "8002:8002"              # open port 8002 to world!
+    environment:
+      - SERVER_HOSTNAME=gunicorn # we will redirect incoming requests to gunicorn server
+      - SERVER_PORT=8000         # default gunicorn port
+    depends_on:                  # wait until gunicorn server is running
+      - gunicorn
+
+  haproxy:
+    build:
+      context: haproxy
+    ports:
+      - "8001:8001"
+    networks:
+      - secret_network
+    environment:
+      - SERVER_HOSTNAME=gunicorn      # same as before
+      - SERVER_PORT=8000              # same as before
+    depends_on:                       # same as before
+      - gunicorn
+
+  wireshark: # never ever run something without knowing what actually is
+    image: lscr.io/linuxserver/wireshark:latest
+    container_name: hrs_lab_wireshark
+    cap_add:
+      - NET_ADMIN
+    network_mode: host
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    restart: unless-stopped
+
+networks:                        # sudo docker network ls
+  secret_network:
+    ipam:
+      config:
+        - subnet: 10.255.0.0/24
+
