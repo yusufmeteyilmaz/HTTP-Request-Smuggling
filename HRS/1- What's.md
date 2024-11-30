@@ -24,12 +24,14 @@ When HTTP/1.0 created, connection was always closed after being used once.
 So "Connection: close" was default behaviour.
 
 By late 1995, web servers and some browsers began using 'Connection: keep-alive'. If we want to explicitly use same connection, we can use Connection: keep-alive.
+
 Default for HTTP/1.0:
 ![](../Images/1-%20What's/HTTP_1.0_conn_default.png)
 
 We are explicitly asking for connection reuse:
 ![](../Images/1-%20What's/HTTP_1.0_conn_alive.png)
 Note for Burp Suite:
+
 ![](../Images/1-%20What's/burp_conn_reuse_setting.png)
 
 You do not need Connection: keep-alive in HTTP/1.1 since it is default anyways.
