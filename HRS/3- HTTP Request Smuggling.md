@@ -21,11 +21,15 @@ We can only affect requests that are using same connection.
 So we only affect ourself, nice!
 
 Wish there was something that force everyone to use same connection.
+
 Like so:
+
 ![](../Images/3-%20HTTP%20Request%20Smuggling/wish.png)
 
 Actually that's possible:
+
 ![](../Images/3-%20HTTP%20Request%20Smuggling/reverse_proxy.png)
+
 If reverse proxy using HTTP/1.1 to talk server, attacker can craft a request.
 Note: it doesn't have to be reverse proxy, it can be anything that does the job.
 (e.g., waf, load balancer..)
@@ -38,8 +42,11 @@ Attacker's goal:
 Example:
 Front end server prioritizes CL (Content Length).
 Backend server prioritizes TE (Transfer encoding).
+
 ![](../Images/3-%20HTTP%20Request%20Smuggling/setup.png)
+
 Attacker sends this request:
+
 ![](../Images/3-%20HTTP%20Request%20Smuggling/frontend.png)
 
 --> Front end saw this and said "This is only a 1 request. I am waiting for 1 response." 
@@ -63,7 +70,9 @@ It will check TE header, TE header says "I don't have any data"
 Backend ends processing first request, sends response back.
 
 Request 1:
+
 ![](../Images/3-%20HTTP%20Request%20Smuggling/backend_0.png)
+
 Response 1:
 ```
 HTTP/1.1 400 Bad Request
@@ -77,7 +86,8 @@ Backend will process remaining data, because connection: keep-alive, unlimited d
 It will parse request, create a respond.
 
 Request 2:
-![[backend_1.png]]
+
+![](../Images/3-%20HTTP%20Request%20Smuggling/backend_1.png)
 
 Response 2:
 ![](../Images/3-%20HTTP%20Request%20Smuggling/from_backend_1.png)
