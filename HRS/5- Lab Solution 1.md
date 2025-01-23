@@ -82,12 +82,12 @@ Ooops, let's try get
 Nope?
 
 Let see other wireshark in docker.
-![[Images/5- Lab Solution 1/wireshark_1.png]]
+![](../Images/5-%20Lab%20Solution%201/wireshark_1.png)
 
 Edit-->Preferences-->Name Resolution-->Resolve network (ip) adresses
 View-->Name Resolution-->Edit Resolved Name
 
-![[Images/5- Lab Solution 1/wireshark_2.png]]
+![](../Images/5-%20Lab%20Solution%201/wireshark_2.png)
 
 Servers sent 3 responses to mitmproxy but mitmproxy only sent me 1 response.
 
@@ -96,11 +96,11 @@ But it is better to don't assume things, every proxy and server can act differen
 Nevertheless we have an easy way out. (I'll show you in a min)
 
 What happens if we send one more request?
-![[Images/5- Lab Solution 1/wireshark_3.png]]
+![](../Images/5-%20Lab%20Solution%201/wireshark_3.png)
 
 It didn't work because our single tcp connection closed, we can confirm it by checking stream id. Meaning? There is a time limit apparently, if x request not send in y seconds, why would we keep connection open? Maybe.. It could be for many reasons, but this is what we know right now.
 
-![[Images/5- Lab Solution 1/wireshark_4.png]]
+![](../Images/5-%20Lab%20Solution%201/wireshark_4.png)
 
 Let's try to send requests in a single tcp connection, but fast.
 ![](../Images/5-%20Lab%20Solution%201/post_req_2.png)
@@ -112,7 +112,7 @@ Another way to do that:
 At first it maybe confusing but think as sending data not request.
 
 ![](../Images/5-%20Lab%20Solution%201/post_req_4.png)
-![[Images/5- Lab Solution 1/wireshark_5.png]]
+![](../Images/5-%20Lab%20Solution%201/wireshark_5.png)
 
 The key difference is, in this case we sent all requests at once, rather than sending request & waiting response cycle. (http pipelining)
 
