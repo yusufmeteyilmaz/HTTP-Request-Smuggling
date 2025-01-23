@@ -9,7 +9,8 @@ https://blog.deteact.com/gunicorn-http-request-smuggling/
 HAProxy has a vulnerability that causes the parser to ignore the TE (Transfer-Encoding) header when encountering the `\x0b` character.
 
 First of all let's see normal behaviour:
-![[Images/5- Lab Solution 2/req_1.png]]
+
+![](../Images/5-%20Lab%20Solution%202/req_1.png)
 
 ![](../Images/5-%20Lab%20Solution%202/default_haproxy.png)
 
@@ -17,9 +18,9 @@ It stripped out CL header and kept TE header.
 This nice behaviour! But what happens if we inject \x0b there?
 (https://gchq.github.io/CyberChef/#recipe=From_Hex('Auto')&input=MGI&oeol=VT copy & paste)
 
-![[Images/5- Lab Solution 2/req_2.png]]
+![](../Images/5-%20Lab%20Solution%202/req_2.png)
 
-![[Images/5- Lab Solution 2/wireshark_1.png]]
+![](../Images/5-%20Lab%20Solution%202/wireshark_1.png)
 
 It didn't strip out TE!
 How will gunicorn behave?
@@ -39,6 +40,7 @@ But there is also another process applied to value, before compared to "chunked"
 So in the end:
 
 ![](../Images/5-%20Lab%20Solution%202/processed_2.png)
+
 Meaning:
 gunicorn accepts that:
 ```
@@ -54,14 +56,18 @@ We need to exploit TE-CL.
 
 Frontend have to send entire request to backend, backend will check TE header.
 
-![[Images/5- Lab Solution 2/req_3.png]]We can use update CL header option, as we want frontend to send everything to backend.
+![](../Images/5-%20Lab%20Solution%202/req_3.png)
 
-![[Images/5- Lab Solution 2/wireshark_2.png]]
+We can use update CL header option, as we want frontend to send everything to backend.
+
+![](../Images/5-%20Lab%20Solution%202/wireshark_2.png)
+
 Nope?
 Server should have sent 2 responses?
 
 Let's make it more obvious, I changed GET / to GET /404
-![[Images/5- Lab Solution 2/wireshark_3.png]]
+
+![](../Images/5-%20Lab%20Solution%202/wireshark_3.png)
 
 We didn't get extra response?
 
@@ -86,16 +92,20 @@ Maybe it stuck in backend some reason?
 We can confirm if it is really there by sending one more request:
 
 First:
+
 ![](../Images/5-%20Lab%20Solution%202/req_4.png)
+
 Second:
+
 ![](../Images/5-%20Lab%20Solution%202/req_5.png)
 
 Send them:
+
 ![](../Images/5-%20Lab%20Solution%202/req_6.png)
 
 That worked!
 
-![[Images/5- Lab Solution 2/wireshark_4.png]]
+![](../Images/5-%20Lab%20Solution%202/wireshark_4.png)
 
 Server returned all responses now?
 
@@ -126,8 +136,11 @@ Somewhy it returns response after we send another request after the first one, o
 Let's do it for last time.
 
 First:
+
 ![](../Images/5-%20Lab%20Solution%202/req_7.png)
+
 Second:
+
 ![](../Images/5-%20Lab%20Solution%202/req_8.png)
 
 We need to make sure second is a valid request.
@@ -140,9 +153,9 @@ But it wouldn't work because of frontend server (it can't parse something is not
 
 ![](../Images/5-%20Lab%20Solution%202/req_9.png)
 
-![[Images/5- Lab Solution 2/wireshark_5.png]]
+![](../Images/5-%20Lab%20Solution%202/wireshark_5.png)
 
-![[Images/5- Lab Solution 2/wireshark_6.png]]
+![](../Images/5-%20Lab%20Solution%202/wireshark_6.png)
 
 What server see:
 Request 1:
